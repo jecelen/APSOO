@@ -43,12 +43,22 @@ public class ViewMenu extends javax.swing.JFrame{
         realizarVenda.setText("Realizar Venda");
         realizarVenda.setToolTipText("");
         realizarVenda.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        realizarVenda.addActionListener(e -> {
+        	
+        	ViewRealizarVenda venda = new ViewRealizarVenda();;
+           	
+        });
        
 
         realizarDevolucao.setBackground(new java.awt.Color(0, 204, 204));
         realizarDevolucao.setFont(new java.awt.Font("Roboto Light", 1, 18));
         realizarDevolucao.setForeground(new java.awt.Color(255, 255, 255));
         realizarDevolucao.setText("Realizar devolução");
+        realizarDevolucao.addActionListener(e -> {
+        	
+        	ViewRealizarDevolucao dev = new ViewRealizarDevolucao();;
+           	
+        });
 
         tituloPagina.setFont(new java.awt.Font("Roboto Light", 1, 36));
         tituloPagina.setForeground(new java.awt.Color(153, 153, 153));
