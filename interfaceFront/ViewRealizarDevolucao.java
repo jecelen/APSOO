@@ -1,8 +1,9 @@
 package interfaceFront;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-import controladoras.Controller1;
+import controladoras.ControladorDevolucao;
 
 import java.util.ArrayList;
 import java.awt.*;
@@ -34,15 +35,17 @@ public class ViewRealizarDevolucao extends JFrame {
 	private JSeparator jSeparator1;
 	private JScrollPane jScrollPane1;
 	private JLabel data;
+	private DefaultTableModel model;
+	private JRadioButton vendaSelecionada;
 	
 	
 	
 	
 	 public ViewRealizarDevolucao() {
 		 
+		 ControladorDevolucao contro2 = new ControladorDevolucao();
 		 
 		 
-		 	Controller1 control = new Controller1();
 		 
 		 	setVisible(true);
 			
@@ -63,13 +66,14 @@ public class ViewRealizarDevolucao extends JFrame {
 	        descrProd = new javax.swing.JLabel();
 	        dDescrProd = new javax.swing.JTextField();
 	        jScrollPane1 = new javax.swing.JScrollPane();
-	        vendasRetornadas = new javax.swing.JTable();
+	        
 	        dMotivo = new javax.swing.JTextField();
 	        motivo = new javax.swing.JLabel();
 	        apto = new javax.swing.JCheckBox();
 	        cancela = new javax.swing.JButton();
 	        confirmaDev = new javax.swing.JButton();
 	        tituloDev = new javax.swing.JLabel();
+	        model = new DefaultTableModel();
 
 	        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 	        setBackground(new java.awt.Color(255, 255, 255));
@@ -89,6 +93,7 @@ public class ViewRealizarDevolucao extends JFrame {
 	        buscaCPF.setForeground(new java.awt.Color(255, 255, 255));
 	        buscaCPF.setText("🔍");
 	        buscaCPF.setToolTipText("");
+	        
 
 	        nomeCliente.setEditable(false);
 	        nomeCliente.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
@@ -115,23 +120,101 @@ public class ViewRealizarDevolucao extends JFrame {
 	        this.data.setFont(new Font("Roboto Light", 1, 14)); 
 	        this.data.setForeground(new Color(0, 0, 0));
 	        this.data.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-	        this.data.setText(control.getDateTime());
-	     
+	        this.data.setText(contro2.getDateTime());
+	        
+	        
+	        buscaCPF.addActionListener(e -> { //Parte de busca do Cliente
+        		
+	        	if(contro2.existeCliente(dCPF.getText())) {
+	        		
+	        		nomeCliente.setText(contro2.getNomeCli(dCPF.getText()));
+	        		
+	        		
+	        	}else {
+	        		
+	        		JOptionPane.showMessageDialog(null, "Cliente não encontrado", "Erro", JOptionPane.ERROR_MESSAGE);
+	        	}
+	        	
+	        	
+	        });
+	        
+	        buscaProd.addActionListener(e -> {
+	        	
+	        	int codProdInt = 0;
+	        	
+	        	
+                if(contro2.existeProduto(Integer.parseInt(dCodProd.getText()))){
+                	
+                	
+                	
+                	 codProdInt = Integer.parseInt(dCodProd.getText());
+              
+         			 
+                	this.dDescrProd.setText(contro2.retornaNome(codProdInt));
+        			
+        		}else {
+        			
+        			JOptionPane.showMessageDialog(null, "Produto não encontrado", "Erro", JOptionPane.ERROR_MESSAGE);
+        		}
+                
+                
+                if(nomeCliente.getText().isEmpty() == false) {
+                	
+                	if(this.dDescrProd.getText().isEmpty() == false) {
+                		
+                		try {
+							contro2.existeVendasCliente(codProdInt, dCPF.getText() );
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+                		
+                	}else {
+                		
+                		JOptionPane.showMessageDialog(null, "Produto não foi pesquisado", "Erro", JOptionPane.ERROR_MESSAGE);
+                	}
+                	
+                }else {
+                	
+                	JOptionPane.showMessageDialog(null, "Cliente não foi pesquisado", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+	        	
+	        	
+	        });
 
+	        model.addColumn("Venda");
+	        model.addColumn("Data");
+	        model.addColumn("Quantidade adquirida");
+	        
+	        vendasRetornadas = new JTable(model);
 	        vendasRetornadas.setFont(new java.awt.Font("Roboto Light", 1, 12)); 
 	        vendasRetornadas.setForeground(new java.awt.Color(153, 153, 153));
-	        vendasRetornadas.setModel(new javax.swing.table.DefaultTableModel(
+	      
+	       
+	        model.addRow(new Object[]{"Valor 1", "Valor 2"});
+	        model.addRow(new Object[]{"Valor 3", "Valor 4"});
+	        model.addRow(new Object[]{"Valor 5", "Valor 6"});
+	        
+	        vendasRetornadas.getSelectedRow();
+	        //String nome = "nome";
+	        
+
+	      
+	       /* for(int i =0; i < 3; i++ ) {
+	        	
+	        	
+	        }*/
+	        /*vendasRetornadas.setModel(new javax.swing.table.DefaultTableModel(
 	            new Object [][] {
-	                {null, null, null, null}
+	                {null, null, null, null},
+	             	{null, 1, contro2.getDateTime(), nome}
 	            },
 	            new String [] {
 	                "Selecione", "Venda", "Data", "Quantidade adquirida"
 	            }
 	        ) {
 	            
-				/**
-				 * 
-				 */
+				
 				private static final long serialVersionUID = 1L;
 				
 				Class[] types = new Class [] {
@@ -148,8 +231,8 @@ public class ViewRealizarDevolucao extends JFrame {
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {
 	                return canEdit [columnIndex];
 	            }
-	        });
-	        vendasRetornadas.setToolTipText("");
+	        });*/
+	        //vendasRetornadas.setToolTipText("");
 	        vendasRetornadas.setSelectionBackground(new java.awt.Color(0, 204, 204));
 	        vendasRetornadas.setBackground(new java.awt.Color(255, 255, 255));
 	        jScrollPane1.setViewportView(vendasRetornadas);
